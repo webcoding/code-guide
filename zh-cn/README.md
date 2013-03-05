@@ -35,18 +35,17 @@
 ----------
 
 
+# 代码书写指南
+
+参考摘自 [file an issue on GitHub](https://github.com/mdo/code-guide)，有改动。
 
 ## 黄金法则
 
 > 任何代码库中的所有代码应该看起来像是一个人书写的，不管有多少人贡献过代码。
 
-这意味着任何时候都要严格执行这些商定的准则。对于增加或减少代码的法则，请参看 [file an issue on GitHub](https://github.com/mdo/code-guide).
-
-
+这意味着任何时候都要严格执行这些商定的准则。对于增加或减少代码的法则，请参看 [Code-guide](https://github.com/webcoding/code-guide/tree/master/zh-cn).
 
 ----------
-
-
 
 ## HTML
 
@@ -129,21 +128,41 @@ HTML 属性应该遵循特定的顺序，以便能更易阅读代码。
 
 ## CSS
 
-### CSS 语法
+### 外部CSS引用
 
-* 使用两个空格的 soft-tabs
+必须使用如下格式(rel在前，href在后，无type="text/css"及charset)：
+
+````&lt;link rel="stylesheet" href="css_example_url"&gt;
+````
+
+### CSS 注意事项
+
+* 无特殊说明，编码统一为utf-8；
+* 防止文件合并及编码转换时造成问题，请将样式中文字体名字改成对应的英文名字（unicode码），如：宋体（ \5b8b\4f53）微软雅黑（”Microsoft YaHei”,”\5FAE\8F6F\96C5\9ED1″）；
+* 书写代码前，考虑并提高样式重复使用率；
+* 禁止使用 `expression` 表达式；
+* 禁止滥用 `！important`；
+* 能缩写的尽量缩写，如 `padding:5px 0 0 5px;`；
+* 层级(z-index)必须清晰明确，适当划分组件层级范围，禁止层级间盲目攀比；
+* 为方便组件模块化和提高弹性，正常情况下，为避免外边界冲突，组件不应设置外边界，外边界用组合css方式实现，如：m10{margin:10px}mt10{margin-top:10px}等；
+* 必须为大区块&重要模块的样式添加注释，小区块适量注释；
+* 正式发布前应进行压缩，压缩后文件的命名应添加”.min”后缀；
+* 代码缩进与格式：请参照以下 CSS 书写规范；
+
+### CSS 书写规范
+
+* 使用四个空格的 soft-tabs 缩进
 * 写组选择器时，保持选择器各占一行
-* 在声明块的左 “{” 前应该有一个空格
-* 关闭块的 “}” 要新行显示
-* 在每个属性的 <code>:</code> 后包含一个空格
-* 每个声明应该自己独占其行
-* 每个属性以 “;” 结尾 
-* 分割选择器的 “，” 后应该包含一个空格
+* 在属性块的左 “{” 前应该有一个空格
+* 关闭属性块的右 “}” 要新起一行
+* 每个属性的 “:” 后包含一个空格
+* 每个属性应该自己独占一行
+* 分割选择器的 “,” 后应该包含一个空格
 * Don't include spaces after commas in RGB or RGBa colors, and don't preface values with a leading zero
-* 小写所有16进制值, 例如, <code>#fff</code> 而非 <code>#FFF</code>
-* 使用简写16进制值, 例如, <code>#fff</code> 而非 <code>#ffffff</code>
-* 选择器中引用属性值, 例如, <code>input[type="text"]</code>
-* 避免0值设置单位, 例如, <code>margin: 0;</code> 而非 <code>margin: 0px;</code>
+* 小写所有16进制值, 例如, `#fff` 而非 `#FFF`
+* 使用简写16进制值, 例如, `#fff` 而非 `#ffffff`
+* 选择器中引用属性值, 例如, `input[type="text"]`
+* 避免0值设置单位, 例如, `margin: 0;` 而非 `margin: 0px;`
 
 **错误示例：**
 
@@ -169,7 +188,7 @@ HTML 属性应该遵循特定的顺序，以便能更易阅读代码。
 }
 ````
 
-这里使用的术语有问题？参见 [syntax section of the Cascading Style Sheets article](http://en.wikipedia.org/wiki/Cascading_Style_Sheets#Syntax) on Wikipedia.
+常见的CSS术语，请参见 [syntax section of the Cascading Style Sheets article](http://en.wikipedia.org/wiki/Cascading_Style_Sheets#Syntax) on Wikipedia.
 
 
 ### 属性顺序
@@ -220,12 +239,14 @@ HTML 属性应该遵循特定的顺序，以便能更易阅读代码。
 当使用供应商前缀的属性时，每个属性缩进到vlaue值垂直对齐的位置，方便多行编辑。
 
 ````css
+/* Corner radius-圆角 */
 .selector {
   -webkit-border-radius: 3px;
      -moz-border-radius: 3px;
           border-radius: 3px;
 }
 ````
+注：`-khtml-border-radius: 3px;` 是苹果的那个浏览器的，现在使用 `-webkit-`
 
 在 Textmate、Sublime Text 2 以及 notepad++等工具中, 都支持多行编辑。
 
@@ -278,13 +299,14 @@ In Textmate, use **Text &rarr; Edit Each Line in Selection** (&#8963;&#8984;A). 
 }
 ````
 
-#### 类名
+#### 类名与命名
 
 * 保持类名使用小写字母或连接符 (不要使用下划线或驼峰命名法)
 * 避免使用随意的首字符命名法
 * 保持命名尽可能短并简洁
 * 使用有意义的命名；使用结构化或目的性的意义名称
 * 根据最近的父组件基类作为命名前缀
+* 为JavaScript预留钩子的命名，请以 JS_ 起始，比如：JS_ui-tab, JS_slidebox；或者使用 data-* 挂钩JS功能
 
 **Bad example:**
 
@@ -351,3 +373,4 @@ span { ... }
 ### Thanks
 
 Heavily inspired by [Idiomatic CSS](https://github.com/necolas/idiomatic-css) and the [GitHub Styleguide](http://github.com/styleguide). Made with all the love in the world by [@mdo](http://twitter.com/mdo).
+

@@ -132,7 +132,8 @@ HTML 属性应该遵循特定的顺序，以便能更易阅读代码。
 
 必须使用如下格式(rel在前，href在后，无type="text/css"及charset)：
 
-````&lt;link rel="stylesheet" href="css_example_url"&gt;
+````
+&lt;link rel="stylesheet" href="css_example_url" &gt;
 ````
 
 ### CSS 注意事项
